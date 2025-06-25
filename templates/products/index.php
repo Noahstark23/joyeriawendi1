@@ -27,10 +27,15 @@
           <div class="card-body">
             <h5 class="card-title"><?= htmlspecialchars($p['name']) ?></h5>
             <p class="card-text">$<?= number_format($p['price'], 2) ?></p>
-            <a href="/product/<?= htmlspecialchars($p['slug']) ?>" class="btn btn-primary">Ver detalle</a>
+              <a href="/product/<?= htmlspecialchars($p['slug']) ?>" class="btn btn-primary">Ver detalle</a>
+              <form method="post" action="/cart/add" class="d-inline mt-2">
+                <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                <input type="number" name="quantity" value="1" min="1" class="form-control d-inline-block w-auto">
+                <button class="btn btn-success">Agregar al carrito</button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
     <?php endforeach; ?>
   </div>
 </body>

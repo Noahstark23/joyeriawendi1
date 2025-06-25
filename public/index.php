@@ -8,6 +8,8 @@ use PDO;
 
 session_start();
 
+$cartController = new \App\Controller\CartController();
+
 // Load environment variables if available
 if (file_exists(__DIR__ . '/../.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
@@ -34,6 +36,9 @@ $router->get('/auth/google/callback', [AuthController::class, 'handleGoogleCallb
 $router->get('/', fn() => $productController->index());
 $router->get('/search', fn($vars) => $productController->search(array_merge($_GET, $vars)));
 $router->get('/product/{slug}', fn($params) => $productController->show($params));
+$router->get('/cart', fn() => $cartController->index());
+$router->post('/cart/add', fn() => $cartController->add($_POST));
+$router->post('/cart/remove', fn() => $cartController->remove($_POST));
 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = strtok($_SERVER['REQUEST_URI'], '?');
