@@ -32,6 +32,7 @@ $router->get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle'
 $router->get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 $router->get('/', fn() => $productController->index());
+$router->get('/search', fn($vars) => $productController->search(array_merge($_GET, $vars)));
 $router->get('/product/{slug}', fn($params) => $productController->show($params));
 
 $method = $_SERVER['REQUEST_METHOD'];

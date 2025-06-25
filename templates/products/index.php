@@ -7,7 +7,16 @@
   <title>Productos</title>
 </head>
 <body class="container py-5">
+  <form class="mb-4" method="get" action="/search">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Buscar productos..." value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>">
+      <button class="btn btn-primary" type="submit">Buscar</button>
+    </div>
+  </form>
   <h1 class="mb-4">Productos</h1>
+  <?php if (!empty($_GET['q'])): ?>
+    <h2>Resultados para "<?= htmlspecialchars($_GET['q']) ?>"</h2>
+  <?php endif; ?>
   <div class="row">
     <?php foreach ($products as $p): ?>
       <div class="col-md-4 mb-4">

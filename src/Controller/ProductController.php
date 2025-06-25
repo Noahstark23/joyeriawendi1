@@ -30,4 +30,13 @@ class ProductController
         }
         include __DIR__ . '/../../templates/products/show.php';
     }
+
+    public function search(array $params): void
+    {
+        $term = '%' . ($params['q'] ?? '') . '%';
+        $stmt = $this->pdo->prepare('SELECT * FROM products WHERE name LIKE ? OR description LIKE ?');
+        $stmt->execute([$term, $term]);
+        $products = $stmt->fetchAll();
+        include __DIR__ . '/../../templates/products/index.php';
+    }
 }
