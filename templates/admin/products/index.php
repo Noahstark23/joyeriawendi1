@@ -1,12 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>Administrar Productos</title>
-</head>
-<body class="container py-5">
+<?php include __DIR__ . '/../../partials/header.php'; ?>
   <h1 class="mb-4">Productos</h1>
   <a href="/admin/products/create" class="btn btn-primary mb-3">Nuevo producto</a>
   <table class="table">
@@ -35,5 +27,4 @@
       <?php endforeach; ?>
     </tbody>
   </table>
-</body>
-</html>
+<?php include __DIR__ . '/../../partials/footer.php'; ?>

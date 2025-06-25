@@ -1,12 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title><?= htmlspecialchars($product['name']) ?></title>
-</head>
-<body class="container py-5">
+<?php include __DIR__ . '/../partials/header.php'; ?>
   <div class="row">
     <div class="col-md-6">
       <?php if (!empty($product['image'])): ?>
@@ -24,5 +16,4 @@
       </form>
     </div>
   </div>
-</body>
-</html>
+<?php include __DIR__ . '/../partials/footer.php'; ?>
