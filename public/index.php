@@ -4,23 +4,24 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Router;
 use App\Controller\AuthController;
 use App\Controller\ProductController;
+use Dotenv\Dotenv;
 use PDO;
 
 session_start();
 
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+$pdo = new PDO(
+    "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']};charset=utf8mb4",
+    $_ENV['DB_USER'],
+    $_ENV['DB_PASS'],
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+);
+
 $cartController = new \App\Controller\CartController();
-
-// Load environment variables if available
-if (file_exists(__DIR__ . '/../.env')) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-    $dotenv->load();
-}
-
-$dsn = $_ENV['DB_DSN'] ?? 'mysql:host=localhost;dbname=app;charset=utf8mb4';
-$dbUser = $_ENV['DB_USER'] ?? 'root';
-$dbPass = $_ENV['DB_PASS'] ?? '';
-$pdo = new PDO($dsn, $dbUser, $dbPass);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$adminMiddleware = new \App\Middleware\AdminMiddleware($pdo);
+$productAdmin = new \App\Controller\Admin\ProductAdminController($pdo);
 
 $productController = new ProductController($pdo);
 
@@ -32,6 +33,31 @@ $router->get('/auth/login', [AuthController::class, 'showLogin']);
 $router->post('/auth/login', [AuthController::class, 'login']);
 $router->get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
 $router->get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+$router->get('/admin/products', function() use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->index();
+});
+$router->get('/admin/products/create', function() use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->create();
+});
+$router->post('/admin/products/store', function() use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->store($_POST);
+});
+$router->get('/admin/products/edit/{id}', function($vars) use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->edit($vars);
+});
+$router->post('/admin/products/update', function() use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->update($_POST);
+});
+$router->post('/admin/products/destroy', function() use ($adminMiddleware, $productAdmin) {
+    $adminMiddleware->handle();
+    $productAdmin->destroy($_POST);
+});
 
 $router->get('/', fn() => $productController->index());
 $router->get('/search', fn($vars) => $productController->search(array_merge($_GET, $vars)));
