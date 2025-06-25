@@ -4,6 +4,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Router;
 use App\Controller\AuthController;
 use App\Controller\ProductController;
+use App\Controller\PageController;
+use App\Controller\ContactController;
 use Dotenv\Dotenv;
 use PDO;
 
@@ -24,6 +26,8 @@ $adminMiddleware = new \App\Middleware\AdminMiddleware($pdo);
 $productAdmin = new \App\Controller\Admin\ProductAdminController($pdo);
 
 $productController = new ProductController($pdo);
+$pageController    = new PageController();
+$contactController = new ContactController();
 
 $router = new Router();
 
@@ -59,7 +63,13 @@ $router->post('/admin/products/destroy', function() use ($adminMiddleware, $prod
     $productAdmin->destroy($_POST);
 });
 
-$router->get('/', fn() => $productController->index());
+$router->get('/',               fn() => $pageController->home());
+$router->get('/about',          fn() => $pageController->about());
+$router->get('/contact',        fn() => $pageController->contact());
+$router->post('/contact/send',  fn() => $contactController->send($_POST));
+$router->get('/policies',       fn() => $pageController->policies());
+
+$router->get('/catalog', fn() => $productController->index());
 $router->get('/search', fn($vars) => $productController->search(array_merge($_GET, $vars)));
 $router->get('/product/{slug}', fn($params) => $productController->show($params));
 $router->get('/cart', fn() => $cartController->index());
