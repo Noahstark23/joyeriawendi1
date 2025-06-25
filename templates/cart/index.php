@@ -3,6 +3,7 @@ use App\Controller\ProductController;
 $productController = new ProductController($pdo);
 $cart = $_SESSION['cart'] ?? [];
 ?>
+<?php include __DIR__ . '/../partials/header.php'; ?>
 <div class="container mt-5">
   <h1>Tu Carrito</h1>
   <?php if (empty($cart)): ?>
@@ -40,3 +41,4 @@ $cart = $_SESSION['cart'] ?? [];
     <a href="/checkout" class="btn btn-primary">Proceder al Pago</a>
   <?php endif; ?>
 </div>
+<?php include __DIR__ . '/../partials/footer.php'; ?>
