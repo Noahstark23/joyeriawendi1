@@ -17,7 +17,11 @@
       <h1><?= htmlspecialchars($product['name']) ?></h1>
       <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
       <h4 class="text-success">$<?= number_format($product['price'], 2) ?></h4>
-      <button class="btn btn-success">Agregar al carrito</button>
+      <form method="post" action="/cart/add" class="d-inline">
+        <input type="hidden" name="id" value="<?= $product['id'] ?>">
+        <input type="number" name="quantity" value="1" min="1" class="form-control d-inline-block w-auto">
+        <button class="btn btn-success">Agregar al carrito</button>
+      </form>
     </div>
   </div>
 </body>
